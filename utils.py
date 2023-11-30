@@ -2,7 +2,7 @@ import requests
 import json
 import pandas as pd
 
-from file_name_for_tables import EMPLOYERS_JSON, VACANCIES_JSON
+from constants_file_name import EMPLOYERS_JSON, VACANCIES_JSON
 
 employers = {
     'Cбер': '3529',
