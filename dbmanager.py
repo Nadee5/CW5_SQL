@@ -1,7 +1,7 @@
 import csv
 import psycopg2
 
-from file_name_for_tables import EMPLOYERS_CSV, VACANCIES_CSV
+from constants_file_name import EMPLOYERS_CSV, VACANCIES_CSV
 
 
 class DBManager:
