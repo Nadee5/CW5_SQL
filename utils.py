@@ -1,6 +1,10 @@
+import csv
+import re
+
 import requests
 import json
 import pandas as pd
+import re
 
 from constants_file_name import EMPLOYERS_JSON, VACANCIES_JSON
 
@@ -18,6 +22,13 @@ employers = {
 }
 
 
+def clean_html(raw_html):
+    """Очищает текст от тегов html."""
+    cleaner = re.compile('<.*?>')
+    clean_text = re.sub(cleaner, '', raw_html)
+    return clean_text
+
+
 def get_data_employers():
     """Получает данные о работодателях по API, обрабатывает полученные данные."""
     universal_lst_emps = []
@@ -29,7 +40,8 @@ def get_data_employers():
             'company_name': data['name'],
             'area': data['area']['name'],
             'open_vacancies': data['open_vacancies'],
-            'description': data['description'],
+            'description': clean_html(data['description']).replace('&nbsp;&mdash;', ' ').replace('&ndash;',
+                                                                                                 '-'),
             'hh_url': data['alternate_url'],
             'site_url': data['site_url'],
         }
@@ -42,7 +54,6 @@ def get_data_vacancies():
         запускает цикл итерации по страницам с вакансиями каждой компании,
         составляет список словарей с универсальными полями данных."""
     universal_lst_vacs = []
-    current_id = 1
     for employer_id in employers.values():
         url = f'https://api.hh.ru/vacancies?employer_id={employer_id}&only_with_salary=true&page=0&per_page=100'
         data = requests.get(url).json()  # json словарь
@@ -53,7 +64,7 @@ def get_data_vacancies():
                 salary_from = dict_['salary'].get('from')
                 salary_to = dict_['salary'].get('to')
                 if salary_from is not None and salary_to is not None:
-                    salary = (salary_from+salary_to)/2
+                    salary = (salary_from + salary_to) / 2
                 elif salary_from is not None:
                     salary = salary_from
                 elif salary_to is not None:
@@ -61,7 +72,7 @@ def get_data_vacancies():
                 else:
                     print('[INFO] что-то пошло не так')
                 universal_dict = {
-                    'id': current_id,
+                    'id': dict_['id'],
                     'id_company': employer_id,
                     'name_vacancy': dict_['name'],
                     'salary': salary,
@@ -73,8 +84,8 @@ def get_data_vacancies():
                     'experience_name': dict_['experience']['name'],
                     'url': dict_['alternate_url'],
                 }
-                universal_lst_vacs.append(universal_dict)
-                current_id += 1
+                if universal_dict not in universal_lst_vacs:
+                    universal_lst_vacs.append(universal_dict)
     return universal_lst_vacs
 
 

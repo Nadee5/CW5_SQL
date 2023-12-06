@@ -146,7 +146,7 @@ class DBManager:
         """Получает список всех вакансий, у которых зарплата выше средней по всем вакансиям.
         (все вакансии с фильтром >AGV, в валюте RUR)"""
         self.sql = ('SELECT * FROM vacancies '
-                    'WHERE salary > (SELECT AVG(salary) FROM vacancies) AND salary_currency IN (\'RUR\')')
+                    'WHERE salary > (SELECT AVG(salary) FROM vacancies) AND salary_currency IN ("RUR")')
         self.execute_query()
         self.print_query_result()
 
@@ -156,6 +156,6 @@ class DBManager:
         :param keyword: Слово-фильтр для названия вакансий.
         :return: Отфильтрованный список вакансий.
         """
-        self.sql = f'SELECT * FROM vacancies WHERE name_vacancy LIKE \'%{keyword}%\';'
+        self.sql = f"SELECT * FROM vacancies WHERE name_vacancy LIKE '%{keyword}%';"
         self.execute_query()
         self.print_query_result()

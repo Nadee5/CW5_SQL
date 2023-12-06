@@ -67,19 +67,19 @@ def request_to_database(db_object):
         print("5 - Получить список всех вакансий по ключевому слову в названии вакансии.")
         print("0 - Завершить работу.")
 
-        answer = int(input())
-        if answer == 0:
+        answer = input()
+        if answer == '0':
             print("Работа программы завершена.")
             break
-        elif answer == 1:
+        elif answer == '1':
             db_object.get_companies_and_vacancies_count()
-        elif answer == 2:
+        elif answer == '2':
             db_object.get_all_vacancies()
-        elif answer == 3:
+        elif answer == '3':
             db_object.get_avg_salary()
-        elif answer == 4:
+        elif answer == '4':
             db_object.get_vacancies_with_higher_salary()
-        elif answer == 5:
+        elif answer == '5':
             print("Введите слово для поиска:")
             keyword = input()
             db_object.get_vacancies_with_keyword(keyword)
